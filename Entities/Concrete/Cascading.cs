@@ -4,8 +4,7 @@ using System.Text;
 
 namespace Entities.Concrete
 {
-    public class User
+    class Cascading
     {
-        public int Id { get; set; }
     }
 }

@@ -1,7 +1,10 @@
 ﻿using Business.Abstract;
+using Business.BusinessAspects.Autofac;
 using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Validation;
 using Core.CrossCuttingConcerns.Validation;
+
 using Core.Utilities;
 using Core.Utilities.Business;
 using DataAccess.Abstract;
@@ -9,6 +12,7 @@ using Entities.Concrete;
 using Entities.DTOs;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Business.Concrete
@@ -16,13 +20,16 @@ namespace Business.Concrete
     public class TasinmazManager : ITasinmazService
     {
         ITasinmazDal _tasinmazDal;
-        public TasinmazManager(ITasinmazDal tasinmazDal)
+        ILogDal _logDal;
+        public TasinmazManager(ITasinmazDal tasinmazDal , ILogDal logDal)
         {
             _tasinmazDal = tasinmazDal;
+            _logDal = logDal;
         }
 
-
+        //[SecuredOperation("tasinmaz.add,admin")]
         [ValidationAspect(typeof(TasinmazValidator))]
+        //[CacheRemoveAspect("IProductService.Get")]
         public IResult Add(Tasinmaz tasinmaz)
         {
             //iş kodları
@@ -37,21 +44,48 @@ namespace Business.Concrete
             return new SuccessResult("Eklendi");
 
         }
+        public IResult AddLog(Log log)
+        {
+            _logDal.Add(log);
+            return new SuccessResult("Eklendi");
+        }
+
 
         public IDataResult<List<Tasinmaz>> GetAll()
         {
             return new SuccessDataResult<List<Tasinmaz>>(_tasinmazDal.GetAll(), "Listelendi");
         }
 
-        public IDataResult<List<Tasinmaz>> GetAllByCategoryId(int id)
+        public IDataResult<List<Log>> GetAllLog()
         {
-            return new SuccessDataResult<List<Tasinmaz>>(_tasinmazDal.GetAll(p => p.TasinmazId == id));
+            return new SuccessDataResult<List<Log>>(_logDal.GetAll(), "Listelendi");
         }
+
+        public IDataResult<List<Tasinmaz>> GetByUserId(int userId)
+        {
+            return new SuccessDataResult<List<Tasinmaz>>(_tasinmazDal.GetList(p => p.UserId == userId).ToList());
+        }
+
+        public IDataResult<List<Tasinmaz>> GetAllByCategoryId(int userId)
+        {
+            return new SuccessDataResult<List<Tasinmaz>>(_tasinmazDal.GetList(p => p.UserId == userId).ToList());
+        }
+
+        
 
         public IDataResult<Tasinmaz> GetById(int tasinmazId)
         {
             return new SuccessDataResult<Tasinmaz>(_tasinmazDal.Get(p => p.TasinmazId == tasinmazId));
         }
+
+       
+
+        public IDataResult<List<Tasinmaz>> GetByUserId()
+        {
+            return new SuccessDataResult<List<Tasinmaz>>(_tasinmazDal.GetAll(), "Listelendi");
+        }
+
+
 
         public IDataResult<List<TasinmazDetailDto>> GetTasinmazDetails()
         {
@@ -60,8 +94,12 @@ namespace Business.Concrete
 
         public IResult Update(Tasinmaz tasinmaz)
         {
-            throw new NotImplementedException();
+
+            _tasinmazDal.Update(tasinmaz);
+            return new SuccessResult("Güncellendi");
         }
+
+
 
         private IResult CheckIfTasinmazCountOfCategoryCorrect(int tasinmazId)
         {
@@ -74,5 +112,20 @@ namespace Business.Concrete
             return new SuccessResult();
         }
 
+
+
+
+        public IResult Delete(Tasinmaz tasinmaz)
+        {
+            _tasinmazDal.Delete(tasinmaz);
+            return new SuccessResult("silindi");
+        }
+
+        public IDataResult<List<Tasinmaz>> GetListBySehir(int Sid)
+        {
+            throw new NotImplementedException();
+        }
+
+      
     }
 }

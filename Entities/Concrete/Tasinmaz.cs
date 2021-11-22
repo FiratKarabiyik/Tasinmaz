@@ -8,9 +8,10 @@ namespace Entities.Concrete
     public class Tasinmaz : IEntity
     {
         public int TasinmazId { get; set; }
-        public string Il { get; set; }
-        public string Ilce { get; set; }
-        public string Mahalle { get; set; }
+        public int Il { get; set; }
+        public virtual Mahalle Mahalle{ get; set; }
+        public int Ilce { get; set; }
+        public int MahalleId { get; set; }
         public string Ada { get; set; }
         public string Parsel { get; set; }
         public int Kordinat { get; set; }
@@ -19,5 +20,8 @@ namespace Entities.Concrete
         public string Adres { get; set; }
 
         public int UserId { get; set; }
+        public string coorX { get; set; }
+
+        public string  coorY { get; set; }
     }
 }

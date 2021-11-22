@@ -10,8 +10,8 @@ namespace Business.ValidationRules.FluentValidation
     {
         public TasinmazValidator()
         {
-            RuleFor(p => p.Adres).NotEmpty();
-            RuleFor(p => p.Il).MinimumLength(2);
+            //RuleFor(p => p.Adres).NotEmpty();
+            //RuleFor(p => p.Il).MinimumLength(2);
             RuleFor(p => p.Il).NotEmpty();
            
         }

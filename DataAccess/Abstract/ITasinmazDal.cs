@@ -10,6 +10,7 @@ namespace DataAccess.Abstract
     public interface ITasinmazDal : IEntityRepository<Tasinmaz>
     {
         List<TasinmazDetailDto> GetTasinmazDetails();
+        List<Tasinmaz> AllTasinmaz();
 
     }
 }

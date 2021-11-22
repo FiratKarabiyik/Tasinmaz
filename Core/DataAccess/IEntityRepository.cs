@@ -15,5 +15,6 @@ namespace Core.DataAccess
 
         void Delete(T entity);
 
+        IList<T> GetList(Expression<Func<T, bool>> filter = null);
     }
 }
